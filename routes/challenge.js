@@ -87,9 +87,16 @@ router.post('/sendchallenge/:id', fetchuser, async (req, res) => {
 router.get('/getpendingreceivedchallenges', fetchuser, async (req, res) => {
 
     try {
-        const pending = await ChallengeSchema.find({ $and: [{ challengeTo: req.user.id }, { CompletedByReceiver: false }] });
+        if (!req.query.id) {
+            const pending = await ChallengeSchema.find({ $and: [{ challengeTo: req.user.id }, { CompletedByReceiver: false }] });
         
-        res.status(200).json(pending);
+            return res.status(200).json(pending);
+        }
+
+        else {
+            const pending = await ChallengeSchema.find({  })
+        }
+        
 
 
         // const pending = await ChallengeSchema.find({ $or: [
@@ -101,7 +108,7 @@ router.get('/getpendingreceivedchallenges', fetchuser, async (req, res) => {
         res.status(500).json({ error: "Internal Server Error. Please Try Again Later" })
     }
 
-})
+});
 
 
 
@@ -203,7 +210,83 @@ router.post('/checkvalidtest', fetchuser, async (req, res) => {
         res.status(500).json({ error: "Internal Server Error. Please Try Again Later" })
     }
 
-})
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Route 5: Getting number of pending received challenges: GET: http://localhost:5000/api/getnoofpendingreceivedchallenges. Login Required
+router.get('/getnoofpendingreceivedchallenges', fetchuser, async (req, res) => {
+
+    try {
+            const pending = await ChallengeSchema.find({ $and: [{ challengeTo: req.user.id }, { CompletedByReceiver: false }] });
+        
+            return res.status(200).json(pending.length);
+        
+
+
+        // const pending = await ChallengeSchema.find({ $or: [
+        //     { $and: [{ challengeBy: req.user.id }, {  }] },
+        //     { $and: [{ challengeTo: req.user.id }, {  }] }
+        // ] })
+
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error. Please Try Again Later" })
+    }
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Route 6: Getting full challenge history of a single user: GET: http://localhost:5000/api/challengehistory. Login Required
+router.get('/challengehistory', fetchuser, async (req, res) => {
+
+    try {
+        const history = await ChallengeSchema.find({ $or: [
+            { challengeBy: req.user.id },
+            { challengeTo: req.user.id }
+        ] });
+
+        res.send(history);
+
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error. Please Try Again Later" })
+    }
+
+});
 
 
 module.exports = router;
