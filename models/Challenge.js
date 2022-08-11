@@ -52,11 +52,11 @@ const ChallengeSchema = new Schema({
     },
     ReceiverScore: {
         type: Number,
-        default: null
+        default: 0
     },
     SenderScore: {
         type: Number,
-        default: null
+        default: 0
     }
 }, {timestamps: true});
 
