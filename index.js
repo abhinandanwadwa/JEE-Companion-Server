@@ -4,7 +4,7 @@ const cors = require('cors');
 
 connectToMongo();
 
-const PORT = 5000;
+const PORT = 8181 || process.env.PORT;
 
 const app = express();
 app.use(express.json());
